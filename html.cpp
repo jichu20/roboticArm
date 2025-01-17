@@ -74,19 +74,61 @@ String SendHTML(){
     <div class="log" id="log"></div>
 
     <script>
+      let socket;
+      const logDiv = document.getElementById('log');
+
+      // Conectar al WebSocket
+      function connectWebSocket() {
+            socket = new WebSocket('ws://' + location.hostname + ':81/', ['arduino']);
+            socket.onopen = function(event) {
+                console.log('WebSocket conectado');
+                addLog('WebSocket conectado');
+            };
+            socket.onclose = function(event) {
+                console.log('WebSocket desconectado');
+                addLog('WebSocket desconectado');
+            };
+            socket.onmessage = function(event) {
+                console.log('Mensaje recibido: ' + event.data);
+                addLog('Mensaje recibido: ' + event.data);
+            };
+            socket.onerror = function(error) {
+                console.error('WebSocket error: ' + error);
+                addLog('WebSocket error: ' + error);
+            };
+        }
+
       function moveArm(direction) {
-            // Aquí puedes agregar el código para enviar el comando al Arduino
             console.log('Moviendo brazo hacia: ' + direction);
             addLog('Moviendo brazo hacia: ' + direction);
 
-            if (direction === 'up') {
-                fetch('/up')
-                    .then(response => response.text())
-                    .then(data => console.log(data))
-                    .catch(error => console.error('Error:', error));
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(direction);
+            } else {
+                console.error('WebSocket no está conectado');
+                addLog('WebSocket no está conectado');
             }
         }
 
+       // Mostrar mensajes en el registro
+      function logMessage(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        const messageElement = document.createElement('p');
+        messageElement.textContent = `[${timestamp}] ${message}`;
+        logDiv.appendChild(messageElement);
+        logDiv.scrollTop = logDiv.scrollHeight;
+      }
+
+      // Enviar comando al WebSocket
+      function sendCommand(command) {
+        if (!socket || socket.readyState !== WebSocket.OPEN) {
+          logMessage("No estás conectado al WebSocket. Intenta reconectarte.");
+          return;
+        }
+
+        socket.send(command);
+        logMessage(`Comando enviado: ${command}`);
+      }
       function addLog(message) {
         const logDiv = document.getElementById('log');
         const newLog = document.createElement('div');
@@ -94,6 +136,10 @@ String SendHTML(){
         logDiv.appendChild(newLog);
         logDiv.scrollTop = logDiv.scrollHeight;
       }
+
+      window.onload = function() {
+            connectWebSocket();
+        };
     </script>
   </body>
   </html>

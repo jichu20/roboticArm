@@ -14,3 +14,8 @@ El brazo estará compuesto de 4 servomotores que controlaran los movimientos del
 ### 3d-model
 
 Contiene los archivos de impresión 3d de las piezas que forman parte del brazo
+
+# Referencias 
+
+- https://tttapa.github.io/ESP8266/Chap14%20-%20WebSocket.html
+- https://www.instructables.com/Esp8266Websockets-RGB-LED-controller/
