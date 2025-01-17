@@ -25,8 +25,3 @@ jobs:
         - name: Compile Arduino sketch
             run: |
                 arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 path/to/your/sketch.ino
-
-        - name: Upload Arduino sketch (optional)
-            run: |
-                arduino-cli upload -p /dev/ttyUSB0 --fqbn esp8266:esp8266:nodemcuv2 path/to/your/sketch.ino
-            if: github.event_name == 'push'
