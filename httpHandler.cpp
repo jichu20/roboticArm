@@ -1,3 +1,24 @@
+#include "httpHandler.h"
+#include <Arduino.h>
+
+ESP8266WebServer server(80);       // Create a webserver object that listens for HTTP request on port 80
+
+void startHttpServer() {
+    server.on("/", handleRoot);
+    server.onNotFound(handleNotFound);
+    server.begin();
+}
+
+void handleRoot() {
+    sendHTML();
+}
+
+void handleNotFound() {
+    server.send(404, "text/plain", "404: Not Found");
+}
+
+void sendHTML() {
+    String html = R"rawliteral(
 <!DOCTYPE html>
 <html>
 <head>
@@ -65,16 +86,43 @@
         <button onclick="moveArm('open')">Abrir Pinza</button>
         <button class="empty"></button>
         <button onclick="moveArm('close')">Cerrar Pinza</button>
-        
     </div>
-    
+
     <div class="log" id="log"></div>
 
     <script>
+        let socket;
+
+        function connectWebSocket() {
+            socket = new WebSocket('ws://' + location.hostname + ':81/', ['arduino']);
+            socket.onopen = function(event) {
+                console.log('WebSocket conectado');
+                addLog('WebSocket conectado');
+            };
+            socket.onclose = function(event) {
+                console.log('WebSocket desconectado');
+                addLog('WebSocket desconectado');
+            };
+            socket.onmessage = function(event) {
+                console.log('Mensaje recibido: ' + event.data);
+                addLog('Mensaje recibido: ' + event.data);
+            };
+            socket.onerror = function(error) {
+                console.error('WebSocket error: ' + error);
+                addLog('WebSocket error: ' + error);
+            };
+        }
+
         function moveArm(direction) {
-            // Aquí puedes agregar el código para enviar el comando al Arduino
             console.log('Moviendo brazo hacia: ' + direction);
             addLog('Moviendo brazo hacia: ' + direction);
+
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(direction);
+            } else {
+                console.error('WebSocket no está conectado');
+                addLog('WebSocket no está conectado');
+            }
         }
 
         function addLog(message) {
@@ -84,6 +132,13 @@
             logDiv.appendChild(newLog);
             logDiv.scrollTop = logDiv.scrollHeight;
         }
+
+        window.onload = function() {
+            connectWebSocket();
+        };
     </script>
 </body>
 </html>
+    )rawliteral";
+    server.send(200, "text/html", html);
+}
