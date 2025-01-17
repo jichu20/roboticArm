@@ -15,6 +15,6 @@ jobs:
                   board: 'esp8266:esp8266:nodemcuv2'
                   build-properties: 'build.extra_flags=-DDEBUG'
                   output: 'compiled-sketch'
-                  sketch-path: './'
+                  sketch-paths: "- ./roboticArm.ino"
 
         
