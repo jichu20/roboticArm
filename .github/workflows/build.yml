@@ -1,27 +1,13 @@
 name: Build Arduino Project
 
 on:
-    push
-    pull_request
+    - push
+    - pull_request
 
 jobs:
-    build:
+    compile-sketch:
         runs-on: ubuntu-latest
-
         steps:
-        - name: Checkout repository
-            uses: actions/checkout@v2
+            - uses: actions/checkout@v2
 
-        - name: Set up Arduino CLI
-            uses: arduino/setup-arduino-cli@v1
-            with:
-                version: latest
-
-        - name: Install Arduino core for ESP8266
-            run: |
-                arduino-cli core update-index
-                arduino-cli core install esp8266:esp8266
-
-        - name: Compile Arduino sketch
-            run: |
-                arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 path/to/your/sketch.ino
+        
