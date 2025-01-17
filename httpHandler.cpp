@@ -1,3 +1,24 @@
+#include "httpHandler.h"
+#include <Arduino.h>
+
+ESP8266WebServer server(80);       // Create a webserver object that listens for HTTP request on port 80
+
+void startHttpServer() {
+    server.on("/", handleRoot);
+    server.onNotFound(handleNotFound);
+    server.begin();
+}
+
+void handleRoot() {
+    sendHTML();
+}
+
+void handleNotFound() {
+    server.send(404, "text/plain", "404: Not Found");
+}
+
+void sendHTML() {
+    String html = R"rawliteral(
 <!DOCTYPE html>
 <html>
 <head>
@@ -65,7 +86,6 @@
         <button onclick="moveArm('open')">Abrir Pinza</button>
         <button class="empty"></button>
         <button onclick="moveArm('close')">Cerrar Pinza</button>
-        
     </div>
 
     <div class="log" id="log"></div>
@@ -74,7 +94,7 @@
         let socket;
 
         function connectWebSocket() {
-            socket = new WebSocket(`ws://${window.location.hostname}/ws`);
+            socket = new WebSocket('ws://' + location.hostname + ':81/', ['arduino']);
             socket.onopen = function(event) {
                 console.log('WebSocket conectado');
                 addLog('WebSocket conectado');
@@ -97,11 +117,11 @@
             console.log('Moviendo brazo hacia: ' + direction);
             addLog('Moviendo brazo hacia: ' + direction);
 
-            if (direction === 'up') {
-                fetch('/up')
-                    .then(response => response.text())
-                    .then(data => console.log(data))
-                    .catch(error => console.error('Error:', error));
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(direction);
+            } else {
+                console.error('WebSocket no está conectado');
+                addLog('WebSocket no está conectado');
             }
         }
 
@@ -119,3 +139,6 @@
     </script>
 </body>
 </html>
+    )rawliteral";
+    server.send(200, "text/html", html);
+}
