@@ -15,6 +15,23 @@ La placa expondrá un servidor http para exponer una interface web de ayuda para
 
 Dicha web se comunicará con la placa nodeMcu a través de un websocket que escuchará en el puerto 81 de dicha placa las instrucciones a ejecutar.
 
+## Placas
+### NodeMcu 
+La relación de puertos de la nodeMcu es la siguiente:
+```
+static const uint8_t D0   = 16;
+static const uint8_t D1   = 5;
+static const uint8_t D2   = 4;
+static const uint8_t D3   = 0;
+static const uint8_t D4   = 2;
+static const uint8_t D5   = 14;
+static const uint8_t D6   = 12;
+static const uint8_t D7   = 13;
+static const uint8_t D8   = 15;
+static const uint8_t D9   = 3;
+static const uint8_t D10  = 1;
+``` 
+
 ## Recursos
 
 ### 3d-model

@@ -6,16 +6,33 @@
 class RoboticArm {
 public:
     // Constructor
-    RoboticArm(int pinHombro, int pinCodo, int pinMuneca, int pinPinza);
+    RoboticArm(int pinHombro, int pinCodo, int pinBase, int pinPinza);
 
     // Inicializa el brazo robótico
     void init();
 
-    // Mueve el brazo en posición vertical
-    void moveVertical(int angle);
+    // Establece la posición vertical del brazo a la indicada como parámetro.
+    void setVertical(int angle);
 
-    // Mueve el brazo en posición horizontal
+    // Establece la posición horizontal del brazo a la indicada como parámetro.
+    void setHorizontal(int angle);
+    
+    // Mueve el brazo en posición vertical (up)
+    void moveUpVertical(int angle);
+
+    // Mueve el brazo en posición vertical (down)
+    void moveDownVertical(int angle);
+
+    // Mueve el brazo en posición horizontal 
     void moveHorizontal(int angle);
+
+    int getVerticalPosition() {
+        return verticalPosition;
+    }
+
+    int getHorizontalPosition() {
+        return horizontalPosition;
+    }
 
     // Abre la pinza
     void openGripper();
@@ -30,12 +47,12 @@ private:
 
     int pinHombro; // Almacena el pin del servomotor del hombro
     int pinCodo; // Almacena el pin del servomotor del codo
-    int pinMuneca; // Almacena el pin del servomotor de la muñeca
+    int pinBase; // Almacena el pin del servomotor de la muñeca
     int pinPinza; // Almacena el pin del servomotor de la pinza
 
     Servo servoHombro; // Variable que declara el servomotor pra actuar sobre el mismo
     Servo servoCodo; // Variable que declara el servomotor pra actuar sobre el mismo
-    Servo servoMuneca; // Variable que declara el servomotor pra actuar sobre el mismo
+    Servo servoBase; // Variable que declara el servomotor pra actuar sobre el mismo
     Servo servoPinza; // Variable que declara el servomotor pra actuar sobre el mismo
 };
 

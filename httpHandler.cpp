@@ -137,28 +137,30 @@ void sendHTML() {
         <h1>ESP Robotic Arm</h1>
         <div class="toggle-button">
             <button onclick="toggleControlPanel()">Mostrar/Ocultar</button>
+            <button onclick="moveArm('POS_VERT', 180)">Extender</button>
+            <button onclick="moveArm('POS_VERT', 0)">Contraer</button>
         </div>
        
         </div>
         <div class="control-panel" id="controlPanel">
             <button class="empty"></button>
-            <button onclick="moveArm('up', 5)">Arriba</button>
+            <button onclick="moveArm('UP', 10)">Arriba</button>
             <button class="empty"></button>
-            <button onclick="moveArm('left', 5)">Izquierda</button>
+            <button onclick="moveArm('LEFT', 10)">Izquierda</button>
             <button class="empty"></button>
-            <button onclick="moveArm('right', -5)">Derecha</button>
+            <button onclick="moveArm('RIGHT', -10)">Derecha</button>
             <button class="empty"></button>
-            <button onclick="moveArm('down', -5)">Abajo</button>
+            <button onclick="moveArm('DOWN', -10)">Abajo</button>
             <button class="empty"></button>
-            <button onclick="moveArm('open', 0)">Abrir Pinza</button>
+            <button onclick="moveArm('OPEN', 0)">Abrir Pinza</button>
             <button class="empty"></button>
-            <button onclick="moveArm('close', 0)">Cerrar Pinza</button>
+            <button onclick="moveArm('CLOSE', 90)">Cerrar Pinza</button>
         </div>
         <div class="scroll-arms" id="scrollArms">
             <div class="scroll-bar-title">Rotación:</div>
-            <input type="range" min="0" max="180" value="90" class="horizontal-scrollbar" id="horizontalScrollbar" onchange="moveArm('horizontal', this.value)">
+            <input type="range" min="0" max="180" value="90" class="horizontal-scrollbar" id="horizontalScrollbar" onchange="moveArm('POS_HORI', this.value)">
             <div class="scroll-bar-title">Extensión:</div>
-            <input type="range" min="0" max="180" value="90" class="vertical-scrollbar" id="verticalScrollbar" onchange="moveArm('vertical', this.value)">
+            <input type="range" min="0" max="180" value="90" class="vertical-scrollbar" id="verticalScrollbar" onchange="moveArm('POS_VERT', this.value)">
         </div>
         <div class="log" id="log"></div>
 

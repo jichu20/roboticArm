@@ -5,12 +5,12 @@
 #include "wifiHandler.h"
 #include "robotic_arm.h"
 
-const int pinHombro = 12;
-const int pinCodo = 13;
-const int pinMuneca = 14;
-const int pinPinza = 15;
+const int pinBase = 5; // D1
+const int pinHombro = 4; // D2
+const int pinCodo = 0; // D3
+const int pinPinza = 2; // D4
 
-RoboticArm roboticArm(pinHombro, pinCodo, pinMuneca, pinPinza); // Add this line to define an instance of the RoboticArm class
+RoboticArm roboticArm(pinHombro, pinCodo, pinBase, pinPinza); // Add this line to define an instance of the RoboticArm class
 
 
 void setup() {
