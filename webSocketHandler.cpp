@@ -13,7 +13,7 @@ void startWebSocket(RoboticArm &roboticArm)
     // gRoboticArm = roboticArm;
     webSocket.onEvent([&roboticArm](uint8_t num, WStype_t type, uint8_t *payload, size_t length)
                       { onWebSocketEvent(num, type, payload, length, roboticArm); });
-    roboticArm.init();
+    // roboticArm.init();
     Serial.println("WebSocket server started.");
 }
 
@@ -39,44 +39,9 @@ void onWebSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t lengt
         int position;
         int responsePosition;
 
-        // Extract the movement and position from the message
-        int separatorIndex = message.indexOf(':');
-        if (separatorIndex != -1)
-        {
-            movement = message.substring(0, separatorIndex);
-            position = message.substring(separatorIndex + 1).toInt();
-        }
-
         // Invoke the corresponding method in robotic_arm based on the movement
-        Serial.println(movement);
-        if (movement == "UP"){
-            roboticArm.moveUpVertical(position);
-        }
-        else if (movement == "DOWN"){
-            roboticArm.moveDownVertical(position);
-        }
-        else if (movement == "LEFT"){
-            roboticArm.moveHorizontal(position);
-        }
-        else if (movement == "RIGHT"){
-            roboticArm.moveHorizontal(position);
-        }
-        else if (movement == "OPEN"){
-            roboticArm.openGripper();
-        }
-        else if (movement == "CLOSE"){
-            roboticArm.closeGripper();
-        }
-        else if (movement == "POS_VERT"){
-            roboticArm.setVertical(position);
-        }
-        else if (movement == "POS_HORI"){
-            roboticArm.setHorizontal(position);
-        }
-        else{
-            // Invalid movement, handle accordingly
-            Serial.println("Invalid movement");
-        }
+        processWebSocketMessage(roboticArm, message);
+        
         // Echo the message back to the client
         webSocket.sendTXT(num, String(responsePosition).c_str());
 
@@ -84,7 +49,49 @@ void onWebSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t lengt
     }
 }
 
-void handleWebSocket()
-{
+void processWebSocketMessage(RoboticArm& roboticArm, String& message){
+    String movement;
+    int position;
+
+    // Extract the movement and position from the message
+    int separatorIndex = message.indexOf(':');
+    if (separatorIndex != -1)
+    {
+        movement = message.substring(0, separatorIndex);
+        position = message.substring(separatorIndex + 1).toInt();
+    }
+
+    // Invoke the corresponding method in robotic_arm based on the movement
+    if (movement == "UP"){
+        roboticArm.moveUpVertical(position);
+    }
+    else if (movement == "DOWN"){
+        roboticArm.moveDownVertical(position);
+    }
+    else if (movement == "LEFT"){
+        roboticArm.moveHorizontal(position);
+    }
+    else if (movement == "RIGHT"){
+        roboticArm.moveHorizontal(position);
+    }
+    else if (movement == "OPEN"){
+        roboticArm.openGripper();
+    }
+    else if (movement == "CLOSE"){
+        roboticArm.closeGripper();
+    }
+    else if (movement == "POS_VERT"){
+        roboticArm.setVertical(position);
+    }
+    else if (movement == "POS_HORI"){
+        roboticArm.setHorizontal(position);
+    }
+    else{
+        // Invalid movement, handle accordingly
+        Serial.println("Invalid movement");
+    }
+}
+
+void handleWebSocket(){
     webSocket.loop();
 }

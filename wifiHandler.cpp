@@ -1,7 +1,7 @@
 #include "wifiHandler.h"
 #include <Arduino.h>
 
-const char* ssid     = "ESP8266-Access-Point";
+const char* ssid     = "ESP8266-Robotic-Arm";
 const char* password = "123456789";
 
 /* Put IP Address details */

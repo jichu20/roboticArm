@@ -12,7 +12,6 @@ const int pinPinza = 2; // D4
 
 RoboticArm roboticArm(pinHombro, pinCodo, pinBase, pinPinza); // Add this line to define an instance of the RoboticArm class
 
-
 void setup() {
     Serial.begin(115200);
     delay(10);
@@ -25,4 +24,10 @@ void setup() {
 void loop() {
     webSocket.loop(); // constantly check for websocket events
     server.handleClient();
+
+    if (Serial.available()>0){
+        String input = Serial.readStringUntil('\n');
+        processWebSocketMessage(roboticArm, input);
+    }
+
 }
